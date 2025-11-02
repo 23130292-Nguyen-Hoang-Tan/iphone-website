@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apple-shops-news</title>
+
+    <!-- google font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- style -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <!-- icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- navbar -->
+    <!-- Navbar -->
+    <nav>
+      <h2 class="logo">Apple Shops</h2>
+
+      <div class="menu-list">
+        <a href="{% url 'index' %}">Home</a>
+
+        <div class="menu-item">
+          <a href="{% url 'iphone' %}">Iphone</a>
+          <div class="submenu">
+            <a href="#">iPhone X Series</a>
+            <a href="#">iPhone 11 Series</a>
+            <a href="#">iPhone 12 Series</a>
+            <a href="#">iPhone 13 Series</a>
+            <a href="#">iPhone 14 Series</a>
+            <a href="#">iPhone 15 Series</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'ipad' %}">Ipad</a>
+          <div class="submenu">
+            <a href="#">iPad Mini</a>
+            <a href="#">iPad Air</a>
+            <a href="#">iPad Pro</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'macbook' %}">Macbook</a>
+          <div class="submenu">
+            <a href="#">MacBook Air</a>
+            <a href="#">MacBook Pro 13"</a>
+            <a href="#">MacBook Pro 16"</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'phukien' %}">Accessory</a>
+          <div class="submenu">
+            <a href="#">Ốp lưng</a>
+            <a href="#">Sạc</a>
+            <a href="#">Tai nghe</a>
+            <a href="#">Giá đỡ</a>
+          </div>
+        </div>
+
+        <a href="{% url 'new' %}">News</a>
+        <a href="{% url 'contact' %}">Contact</a>
+      </div>
+
+      <div class="menu-right">
+        <div class="search">
+          <button class="btn btn-menu">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+
+        <div class="user">
+          <button class="btn btn-menu">
+            <i class="fas fa-user"></i>
+          </button>
+        </div>
+
+        <div class="cart">
+          <a href="{% url 'cart' %}" class="btn btn-menu">
+            <i class="fas fa-shopping-cart"></i>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- News Section -->
+    <section class="news-section">
+      <h1 class="heading-title">Tin Tức &amp; Cập Nhật</h1>
+
+      <div class="news-wrapper">
+        <!-- News Item 1 -->
+        <div class="news-card">
+          <img src="{% static 'images/new1.jpg' %}" alt="Apple investment" />
+          <div class="news-detail">
+            <h3>Apple tăng cam kết đầu tư US$600 tỷ tại Mỹ</h3>
+            <p>Ngày: 06/08/2025 | Nguồn: Apple Newsroom</p>
+            <p>
+              Apple đã thông báo nâng tổng mức đầu tư tại Hoa Kỳ lên 600 tỷ đô
+              la trong 4 năm tới, khởi động chương trình “American Manufacturing
+              Program”. :contentReference[oaicite:1]{index=1}
+            </p>
+            <a
+              href="https://www.apple.com/newsroom/2025/08/apple-increases-us-commitment-to-600-billion-usd-announces-ambitious-program/"
+              target="_blank"
+              >Đọc thêm →</a
+            >
+          </div>
+        </div>
+
+        <!-- News Item 2 -->
+        <div class="news-card">
+          <img
+            src="{% static 'images/new2.jpg' %}"
+            alt="Apple Watch Blood Oxygen update"
+          />
+          <div class="news-detail">
+            <h3>Cập nhật tính năng “Oxygen trong máu” cho Apple Watch</h3>
+            <p>Ngày: 14/08/2025 | Nguồn: Apple Newsroom</p>
+            <p>
+              Apple sẽ tung bản cập nhật phần mềm cho các mẫu Apple Watch Series
+              9, Series 10 và Ultra 2 để mở rộng tính năng đo Oxygen trong máu
+              tại Mỹ. :contentReference[oaicite:2]{index=2}
+            </p>
+            <a
+              href="https://www.apple.com/newsroom/2025/08/an-update-on-blood-oxygen-for-apple-watch-in-the-us/"
+              target="_blank"
+              >Đọc thêm →</a
+            >
+          </div>
+        </div>
+
+        <!-- Store Info Item -->
+        <div class="news-card store-info">
+          <img
+            src="{% static 'images/collection-5.jpg' %}"
+            alt="Apple Shops Vietnam store"
+          />
+          <div class="news-detail">
+            <h3>Apple Shops Việt Nam – Chi nhánh Biên Hòa sắp khai trương</h3>
+            <p>
+              Hệ thống Apple Shops tại Biên Hòa sẽ khai trương chi nhánh mới với
+              đầy đủ sản phẩm iPhone, iPad, MacBook và dịch vụ hỗ trợ khách
+              hàng. Hãy theo dõi để nhận ưu đãi khai trương!
+            </p>
+            <a href="{% url 'index' %}">Tìm hiểu thêm →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="{% static 'js/app.js' %}"></script>
+  </body>
+</html>
