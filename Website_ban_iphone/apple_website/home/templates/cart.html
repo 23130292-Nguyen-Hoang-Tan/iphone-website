@@ -1,0 +1,347 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apple-shops-cart</title>
+
+    <!-- google font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- style -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <!-- icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- navbar -->
+    <!-- Navbar -->
+    <nav>
+      <h2 class="logo">Apple Shops</h2>
+
+      <div class="menu-list">
+        <a href="{% url 'index' %}">Home</a>
+
+        <div class="menu-item">
+          <a href="{% url 'iphone' %}">Iphone</a>
+          <div class="submenu">
+            <a href="#">iPhone X Series</a>
+            <a href="#">iPhone 11 Series</a>
+            <a href="#">iPhone 12 Series</a>
+            <a href="#">iPhone 13 Series</a>
+            <a href="#">iPhone 14 Series</a>
+            <a href="#">iPhone 15 Series</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'ipad' %}">Ipad</a>
+          <div class="submenu">
+            <a href="#">iPad Mini</a>
+            <a href="#">iPad Air</a>
+            <a href="#">iPad Pro</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'macbook' %}">Macbook</a>
+          <div class="submenu">
+            <a href="#">MacBook Air</a>
+            <a href="#">MacBook Pro 13"</a>
+            <a href="#">MacBook Pro 16"</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'phukien' %}">Accessory</a>
+          <div class="submenu">
+            <a href="#">Ốp lưng</a>
+            <a href="#">Sạc</a>
+            <a href="#">Tai nghe</a>
+            <a href="#">Giá đỡ</a>
+          </div>
+        </div>
+
+        <a href="{% url 'new' %}">News</a>
+        <a href="{% url 'contact' %}">Contact</a>
+      </div>
+
+      <div class="menu-right">
+        <div class="search">
+          <button class="btn btn-menu">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+
+        <div class="user">
+          <button class="btn btn-menu">
+            <i class="fas fa-user"></i>
+          </button>
+        </div>
+
+        <div class="cart">
+          <a href="{% url 'cart' %}" class="btn btn-menu">
+            <i class="fas fa-shopping-cart"></i>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Cart Section -->
+    <section class="product" id="cart">
+      <h1 class="heading-title">Your Shopping Cart</h1>
+
+      <div class="cart-wrapper">
+        <!-- Product 1 -->
+        <div class="cart-item">
+          <div class="product-image">
+            <img
+              src="{% static 'images/Iphone/iphone-15-pro-max.webp' %}"
+              alt="Iphone 15 Pro Max"
+            />
+          </div>
+          <div class="product-detail">
+            <h4>Iphone 15 Pro Max</h4>
+            <span class="price">18.750.000 VNĐ</span>
+            <div class="quantity-control">
+              <button class="qty-btn">-</button>
+              <input type="text" value="1" class="qty-input" />
+              <button class="qty-btn">+</button>
+            </div>
+            <p class="subtotal">Tạm tính: 18.750.000 VNĐ</p>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="cart-item">
+          <div class="product-image">
+            <img
+              src="{% static 'images/Ipad/ipad-air-4.jpg' %}"
+              alt="Ipad Air 4"
+            />
+          </div>
+          <div class="product-detail">
+            <h4>Ipad Air 4</h4>
+            <span class="price">10.000.000 VNĐ</span>
+            <div class="quantity-control">
+              <button class="qty-btn">-</button>
+              <input type="text" value="2" class="qty-input" />
+              <button class="qty-btn">+</button>
+            </div>
+            <p class="subtotal">Tạm tính: 20.000.000 VNĐ</p>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="cart-item">
+          <div class="product-image">
+            <img
+              src="{% static 'images/Macbook/macbook-pro-14.png' %}"
+              alt="Macbook Pro 14"
+            />
+          </div>
+          <div class="product-detail">
+            <h4>Macbook Pro 14</h4>
+            <span class="price">27.500.000 VNĐ</span>
+            <div class="quantity-control">
+              <button class="qty-btn">-</button>
+              <input type="text" value="1" class="qty-input" />
+              <button class="qty-btn">+</button>
+            </div>
+            <p class="subtotal">Tạm tính: 27.500.000 VNĐ</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="cart-summary">
+        <h3>Tổng cộng</h3>
+        <p>Tạm tính: <strong>66.250.000 VNĐ</strong></p>
+        <button class="swiper-btn checkout-btn">Thanh toán</button>
+      </div>
+    </section>
+
+    <!--footer-->
+    <div class="container">
+      <footer>
+        <link
+          rel="stylesheet"
+          href="../../src/style/style-component/style-home/footer.css"
+        />
+        <div class="footer-container">
+          <div class="footer-column">
+            <h3>Sản Phẩm</h3>
+            <ul>
+              <li>Iphone</li>
+              <li>Ipad</li>
+              <li>Macbook</li>
+              <li>Phụ kiện</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Mua Sắm Trực Tuyến</h3>
+            <ul>
+              <li>Ưu Đãi Độc Quyền</li>
+              <li>Khuyến mãi & ưu đãi</li>
+              <li>Hướng dẫn đặt hàng</li>
+              <li>Phương thức thanh toán</li>
+              <li>Chính sách giao hàng</li>
+              <li>Chính sách đổi trả</li>
+              <li>Liên hệ hỗ trợ</li>
+              <li>Điều Khoản & Điều Kiện</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Chương trình đặc biệt</h3>
+            <ul>
+              <li>Ưu đãi thành viên</li>
+              <li>Combo tiết kiệm cho sinh viên</li>
+              <li>Chương trình quà tặng</li>
+              <li>Tích điểm đổi quà</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Bạn Cần Hỗ Trợ?</h3>
+            <ul>
+              <li>Hỏi đáp thường gặp</li>
+              <li>Hướng dẫn bảo quản sản phẩm</li>
+              <li>Chính sách đảm bảo sản phẩm</li>
+              <li>Chính sách bảo hành</li>
+              <li>Gửi phản hồi cho Apple Shop</li>
+              <li>Liên hệ chăm sóc khách hàng</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Sự bền vững</h3>
+            <ul>
+              <li>Môi trường</li>
+              <li>Bảo mật & Quyền riêng tư</li>
+              <li>Trợ năng</li>
+              <li>Công dân Doanh nghiệp</li>
+              <li>Tính bền vững của Doanh nghiệp</li>
+            </ul>
+            <h3>Giới thiệu về Apple Shop</h3>
+            <ul>
+              <li>Thông tin về Công ty</li>
+              <li>Lĩnh vực kinh doanh</li>
+              <li>Nhận diện thương hiệu</li>
+              <li>Tuyển dụng</li>
+              <li>Tin tức & chia sẻ</li>
+              <li>Liên hệ hợp tác</li>
+              <li>Đạo đức</li>
+              <li>Chính sách bảo mật</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>Bản quyền © 2018. Công ty cổ phần Thế Giới Di Động.</p>
+          <p>Công ty cổ phần Thế Giới Di Động</p>
+          <p>Giấy CNĐK: 0303217354 do sở KH & ĐT TP.HCM cấp ngày 02/01/2007.</p>
+          <p>Địa chỉ: 128 Trần Quang Khải, P.Tân Định, TP.Hồ Chí Minh</p>
+          <p>Điện thoại: +84-2839157310</p>
+          <p>Email: hotrotmdt@thegioididong.com</p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Chatbox AI-->
+    <div id="chat-widget">
+      <!-- Chat Icon -->
+      <div id="chat-icon">💬</div>
+
+      <!-- Chat Box -->
+      <div id="chat-box">
+        <div id="chat-header">
+          <span>Tư vấn AI</span>
+          <button id="close-chat">✕</button>
+        </div>
+
+        <div id="chat-messages">
+          <div class="bot-message">Xin chào! Tôi có thể giúp gì cho bạn?</div>
+        </div>
+
+        <div id="chat-input-area">
+          <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." />
+          <button id="send-btn">Gửi</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const checkoutBtn = document.querySelector(".checkout-btn");
+        if (checkoutBtn) {
+          checkoutBtn.addEventListener("click", function () {
+            // Chuyển đến trang checkout.html
+            window.location.href = "{% url 'checkout' %}";
+          });
+        }
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chatIcon = document.getElementById("chat-icon");
+        const chatBox = document.getElementById("chat-box");
+        const closeChat = document.getElementById("close-chat");
+        const sendBtn = document.getElementById("send-btn");
+        const chatInput = document.getElementById("chat-input");
+        const chatMessages = document.getElementById("chat-messages");
+
+        if (!chatIcon || !chatBox || !closeChat) {
+          console.error("Chatbox HTML không tồn tại!");
+          return;
+        }
+
+        chatIcon.onclick = () => {
+          chatBox.classList.add("open");
+          chatIcon.style.display = "none";
+        };
+
+        closeChat.onclick = () => {
+          chatBox.classList.remove("open");
+          chatIcon.style.display = "flex";
+        };
+
+        // Gửi tin nhắn
+        sendBtn.onclick = sendMessage;
+        chatInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") sendMessage();
+        });
+
+        function sendMessage() {
+          const text = chatInput.value.trim();
+          if (!text) return;
+
+          // Tin nhắn user
+          const userMsg = document.createElement("div");
+          userMsg.classList.add("user-message");
+          userMsg.textContent = text;
+          chatMessages.appendChild(userMsg);
+
+          chatInput.value = "";
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+
+          // Bot trả lời tạm
+          setTimeout(() => {
+            const botMsg = document.createElement("div");
+            botMsg.classList.add("bot-message");
+            botMsg.textContent = "AI sẽ trả lời ở đây...";
+            chatMessages.appendChild(botMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }, 600);
+        }
+      });
+    </script>
+    <script src="{% static 'js/app.js' %}"></script>
+  </body>
+</html>

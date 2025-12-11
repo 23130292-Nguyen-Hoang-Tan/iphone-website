@@ -1,0 +1,1031 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apple Shops - Ipad</title>
+
+    <!-- Google font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+
+    <!-- Isotope filter -->
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+
+    <style>
+      .product-container {
+        margin-top: 100px;
+        padding: 2rem;
+      }
+
+      .page-title {
+        font-size: 36px;
+        font-weight: 800;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .search-box {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .search-box input {
+        width: 50%;
+        padding: 0.8rem 1rem;
+        border-radius: 20px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        outline: none;
+      }
+
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .product-card {
+        position: relative;
+        background: var(--whiteColor);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: rgba(0, 0, 0, 0.15) 0 4px 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: rgba(0, 0, 0, 0.25) 0 6px 15px;
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .product-detail {
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .product-button {
+        width: 80%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 8px;
+        background: var(--primaryColor);
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .product-button:hover {
+        background: var(--fontColor);
+      }
+
+      /* HOVER INFO BOX */
+      .hover-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(255, 255, 255, 0.95);
+        width: 100%;
+        height: 100%;
+        padding: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        line-height: 1.4rem;
+      }
+
+      .product-card:hover .hover-info {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* ================== TOAST STYLE ================== */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.4s ease;
+        z-index: 9999;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <h2 class="logo">Apple Shops</h2>
+
+      <div class="menu-list">
+        <a href="{% url 'index' %}">Home</a>
+
+        <div class="menu-item">
+          <a href="{% url 'iphone' %}">Iphone</a>
+          <div class="submenu">
+            <a href="#">iPhone X Series</a>
+            <a href="#">iPhone 11 Series</a>
+            <a href="#">iPhone 12 Series</a>
+            <a href="#">iPhone 13 Series</a>
+            <a href="#">iPhone 14 Series</a>
+            <a href="#">iPhone 15 Series</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'ipad' %}">Ipad</a>
+          <div class="submenu">
+            <a href="#">iPad Mini</a>
+            <a href="#">iPad Air</a>
+            <a href="#">iPad Pro</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'macbook' %}">Macbook</a>
+          <div class="submenu">
+            <a href="#">MacBook Air</a>
+            <a href="#">MacBook Pro 13"</a>
+            <a href="#">MacBook Pro 16"</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'phukien' %}">Accessory</a>
+          <div class="submenu">
+            <a href="#">Ốp lưng</a>
+            <a href="#">Sạc</a>
+            <a href="#">Tai nghe</a>
+            <a href="#">Giá đỡ</a>
+          </div>
+        </div>
+
+        <a href="{% url 'new' %}">News</a>
+        <a href="{% url 'contact' %}">Contact</a>
+      </div>
+
+      <div class="menu-right">
+        <div class="search">
+          <button class="btn btn-menu">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+
+        <div class="user">
+          <button class="btn btn-menu">
+            <i class="fas fa-user"></i>
+          </button>
+        </div>
+
+        <div class="cart">
+          <a href="{% url 'cart' %}" class="btn btn-menu">
+            <i class="fas fa-shopping-cart"></i>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="product-container">
+      <h2 class="page-title">Ipad</h2>
+      <hr />
+
+      <!-- Ô tìm kiếm -->
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="🔍 Tìm kiếm sản phẩm..."
+        />
+      </div>
+
+      <!-- Bộ lọc sản phẩm -->
+      <div class="filter-bar">
+        <select id="filterSeries">
+          <option value="*">Tất cả dòng</option>
+          <option value="air">iPad Air</option>
+          <option value="pro">iPad Pro</option>
+          <option value="mini">iPad Mini</option>
+          <option value="gen">iPad Gen</option>
+        </select>
+
+        <select id="filterStatus">
+          <option value="*">Tất cả</option>
+          <option value="new">New</option>
+          <option value="bestseller">Best Seller</option>
+          <option value="promo">Promo</option>
+        </select>
+
+        <select id="filterStorage">
+          <option value="*">Dung lượng</option>
+          <option value="64">64GB</option>
+          <option value="128">128GB</option>
+          <option value="256">256GB</option>
+          <option value="512">512GB</option>
+        </select>
+
+        <select id="filterPrice">
+          <option value="*">Giá</option>
+          <option value="2">10 – 20 triệu</option>
+          <option value="3">Trên 20 triệu</option>
+        </select>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <!-- PRODUCT CARD -->
+        <div
+          class="product-card accessory"
+          data-price="13590000"
+          data-status="bestseller"
+          data-promo="10"
+          data-series="air"
+          data-storage="64"
+        >
+          <div class="product-label label-blue">Best Seller</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad-air-4.jpg' %}"
+            alt="Ipad Air 4"
+          />
+          <div class="product-detail">
+            <h4>Ipad air 4<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="far fa-star"></i><i class="far fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>13.590.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 22 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 10%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 64 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="14590000"
+          data-status="bestseller"
+          data-promo="50"
+          data-series="air"
+          data-storage="128"
+        >
+          <div class="product-label label-blue">Best Seller</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad-air-5.avif' %}"
+            alt="Ipad Air 5"
+          />
+          <div class="product-detail">
+            <h4>Ipad air 5<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>14.590.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 130 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 50%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 128 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="15990000"
+          data-status="new"
+          data-promo="0"
+          data-series="air"
+          data-storage="256"
+        >
+          <div class="product-label label-red">New</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad-air-6.png' %}"
+            alt="Ipad Air 6"
+          />
+          <div class="product-detail">
+            <h4>Ipad air 6<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="far fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>15.990.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 39 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 0%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 256 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="13590000"
+          data-status="bestseller"
+          data-promo="10"
+          data-series="pro"
+          data-storage="512"
+        >
+          <div class="product-label label-blue">Best Seller</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad-pro-4.jpg' %}"
+            alt="Ipad Pro 4"
+          />
+          <div class="product-detail">
+            <h4>Ipad pro 4<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+            <span>17.590.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 62 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 10%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 512 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="20790000"
+          data-status="promo"
+          data-promo="20"
+          data-series="pro"
+          data-storage="128"
+        >
+          <div class="product-label label-yellow">Promo</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad-pro-6.webp' %}"
+            alt="Ipad Pro 6"
+          />
+          <div class="product-detail">
+            <h4>Ipad pro 6<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="far fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>20.790.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 190 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 20%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 128 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="23990000"
+          data-status="new"
+          data-promo="30"
+          data-series="pro"
+          data-storage="256"
+        >
+          <div class="product-label label-red">New</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad-pro-7.webp' %}"
+            alt="Ipad Pro 7"
+          />
+          <div class="product-detail">
+            <h4>Ipad pro 7<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>23.990.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 51 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 30%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 256 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="21990000"
+          data-status="new"
+          data-promo="30"
+          data-series="gen"
+          data-storage="128"
+        >
+          <div class="product-label label-red">New</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad10.jpg' %}"
+            alt="Ipad 10"
+          />
+          <div class="product-detail">
+            <h4>Ipad 10<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="far fa-star"></i><i class="far fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>21.990.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 51 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 30%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 128 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="13990000"
+          data-status="promo"
+          data-promo="30"
+          data-series="pro"
+          data-storage="64"
+        >
+          <div class="product-label label-yellow">Promo</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad-pro-4.jpg' %}"
+            alt="Ipad pro 4"
+          />
+          <div class="product-detail">
+            <h4>Ipad Pro 4<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="far fa-star"></i><i class="far fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>13.990.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 23 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 30%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 64 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="16590000"
+          data-status="bestseller"
+          data-promo="40"
+          data-series="air"
+          data-storage="128"
+        >
+          <div class="product-label label-blue">Best Seller</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad-air-5.avif' %}"
+            alt="Ipad air 5"
+          />
+          <div class="product-detail">
+            <h4>Ipad Air 5<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="far fa-star"></i><i class="far fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>16.590.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 72 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 40%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 128 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="13990000"
+          data-status="promo"
+          data-promo="20"
+          data-series="gen"
+          data-storage="64"
+        >
+          <div class="product-label label-yellow">Promo</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad7.jpg' %}"
+            alt="Ipad 7"
+          />
+          <div class="product-detail">
+            <h4>Ipad 7<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="far fa-star"></i><i class="far fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>13.990.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 11 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 20%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 64 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="21990000"
+          data-status="bestseller"
+          data-promo="50"
+          data-series="gen"
+          data-storage="256"
+        >
+          <div class="product-label label-blue">Best Seller</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad9.jpg' %}"
+            alt="Ipad 9"
+          />
+          <div class="product-detail">
+            <h4>Ipad 9<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="far fa-star"></i><i class="far fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>12.590.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 10 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 50%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 256 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+
+        <div
+          class="product-card accessory"
+          data-price="14990000"
+          data-status="promo"
+          data-promo="30"
+          data-series="pro"
+          data-storage="128"
+        >
+          <div class="product-label label-yellow">Promo</div>
+          <img
+            class="product-image"
+            src="{% static 'images/Ipad/ipad-pro-5.jpg' %}"
+            alt="Ipad Pro 5"
+          />
+          <div class="product-detail">
+            <h4>Ipad Pro 5<i class="far fa-heart"></i></h4>
+            <div class="rating">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="far fa-star"></i><i class="far fa-star"></i
+              ><i class="far fa-star"></i>
+            </div>
+            <span>14.990.000 VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn 51 sản phẩm</p>
+            <p><strong>Giảm giá:</strong> 30%</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p><strong>Dung lượng:</strong> 128 GB</p>
+            <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
+            <p>
+              <strong
+                ><a href="{% url 'product_detail' %}"
+                  >Xem chi tiết sản phẩm</a
+                ></strong
+              >
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+      </div>
+    </main>
+
+    <!--footer-->
+    <div class="container">
+      <footer>
+        <link
+          rel="stylesheet"
+          href="../../src/style/style-component/style-home/footer.css"
+        />
+        <div class="footer-container">
+          <div class="footer-column">
+            <h3>Sản Phẩm</h3>
+            <ul>
+              <li>Iphone</li>
+              <li>Ipad</li>
+              <li>Macbook</li>
+              <li>Phụ kiện</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Mua Sắm Trực Tuyến</h3>
+            <ul>
+              <li>Ưu Đãi Độc Quyền</li>
+              <li>Khuyến mãi & ưu đãi</li>
+              <li>Hướng dẫn đặt hàng</li>
+              <li>Phương thức thanh toán</li>
+              <li>Chính sách giao hàng</li>
+              <li>Chính sách đổi trả</li>
+              <li>Liên hệ hỗ trợ</li>
+              <li>Điều Khoản & Điều Kiện</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Chương trình đặc biệt</h3>
+            <ul>
+              <li>Ưu đãi thành viên</li>
+              <li>Combo tiết kiệm cho sinh viên</li>
+              <li>Chương trình quà tặng</li>
+              <li>Tích điểm đổi quà</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Bạn Cần Hỗ Trợ?</h3>
+            <ul>
+              <li>Hỏi đáp thường gặp</li>
+              <li>Hướng dẫn bảo quản sản phẩm</li>
+              <li>Chính sách đảm bảo sản phẩm</li>
+              <li>Chính sách bảo hành</li>
+              <li>Gửi phản hồi cho Apple Shop</li>
+              <li>Liên hệ chăm sóc khách hàng</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Sự bền vững</h3>
+            <ul>
+              <li>Môi trường</li>
+              <li>Bảo mật & Quyền riêng tư</li>
+              <li>Trợ năng</li>
+              <li>Công dân Doanh nghiệp</li>
+              <li>Tính bền vững của Doanh nghiệp</li>
+            </ul>
+            <h3>Giới thiệu về Apple Shop</h3>
+            <ul>
+              <li>Thông tin về Công ty</li>
+              <li>Lĩnh vực kinh doanh</li>
+              <li>Nhận diện thương hiệu</li>
+              <li>Tuyển dụng</li>
+              <li>Tin tức & chia sẻ</li>
+              <li>Liên hệ hợp tác</li>
+              <li>Đạo đức</li>
+              <li>Chính sách bảo mật</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>Bản quyền © 2018. Công ty cổ phần Thế Giới Di Động.</p>
+          <p>Công ty cổ phần Thế Giới Di Động</p>
+          <p>Giấy CNĐK: 0303217354 do sở KH & ĐT TP.HCM cấp ngày 02/01/2007.</p>
+          <p>Địa chỉ: 128 Trần Quang Khải, P.Tân Định, TP.Hồ Chí Minh</p>
+          <p>Điện thoại: +84-2839157310</p>
+          <p>Email: hotrotmdt@thegioididong.com</p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Chatbox AI-->
+    <div id="chat-widget">
+      <!-- Chat Icon -->
+      <div id="chat-icon">💬</div>
+
+      <!-- Chat Box -->
+      <div id="chat-box">
+        <div id="chat-header">
+          <span>Tư vấn AI</span>
+          <button id="close-chat">✕</button>
+        </div>
+
+        <div id="chat-messages">
+          <div class="bot-message">Xin chào! Tôi có thể giúp gì cho bạn?</div>
+        </div>
+
+        <div id="chat-input-area">
+          <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." />
+          <button id="send-btn">Gửi</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const searchInput = document.getElementById("searchInput");
+      const productGrid = document.getElementById("productGrid");
+      const products = Array.from(productGrid.children);
+
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+
+        // Tách sản phẩm khớp và không khớp
+        const matched = [];
+        const unmatched = [];
+
+        products.forEach((card) => {
+          const name = card
+            .querySelector(".product-detail h4")
+            .innerText.toLowerCase();
+
+          if (name.includes(query)) {
+            matched.push(card);
+          } else {
+            unmatched.push(card);
+          }
+        });
+
+        // Xóa toàn bộ grid và sắp lại thứ tự
+        productGrid.innerHTML = "";
+
+        // Hiện sản phẩm khớp, ẩn sản phẩm không khớp
+        matched.forEach((card) => {
+          card.style.display = "block";
+          productGrid.appendChild(card);
+        });
+        unmatched.forEach((card) => {
+          card.style.display = "none";
+          productGrid.appendChild(card);
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // ================== YÊU THÍCH + ADD TO CART ==================
+        document.addEventListener("click", function (e) {
+          if (e.target.classList.contains("fa-heart")) {
+            e.target.classList.toggle("liked");
+            showToast("❤️ Đã thêm vào danh sách yêu thích!");
+          }
+
+          if (e.target.classList.contains("product-button")) {
+            showToast("🛒 Sản phẩm đã được thêm vào giỏ hàng!");
+          }
+        });
+
+        // ======== HÀM HIỂN THỊ TOAST ========
+        function showToast(message) {
+          const toast = document.createElement("div");
+          toast.className = "toast";
+          toast.innerText = message;
+          document.body.appendChild(toast);
+
+          // Hiện ra với animation
+          setTimeout(() => {
+            toast.classList.add("show");
+          }, 100);
+
+          // Tự động ẩn sau 2.5 giây
+          setTimeout(() => {
+            toast.classList.remove("show");
+            setTimeout(() => toast.remove(), 500);
+          }, 2500);
+        }
+      });
+    </script>
+
+    <script>
+      // Isotope Filter Script
+      var iso = new Isotope("#productGrid", {
+        itemSelector: ".product-card",
+        layoutMode: "fitRows",
+        transitionDuration: 0,
+      });
+
+      function applyFilter() {
+        let series = document.getElementById("filterSeries").value;
+        let status = document.getElementById("filterStatus").value;
+        let storage = document.getElementById("filterStorage").value;
+        let price = document.getElementById("filterPrice").value;
+
+        iso.arrange({
+          filter: function (item) {
+            let pSeries = item.getAttribute("data-series");
+            let pStatus = item.getAttribute("data-status");
+            let pStorage = item.getAttribute("data-storage");
+            let pPrice = parseInt(item.getAttribute("data-price"));
+
+            // Filter theo series
+            if (series !== "*" && pSeries !== series) return false;
+
+            // Filter theo trạng thái (new, bestseller, promo)
+            if (status !== "*" && pStatus !== status) return false;
+
+            // Filter storage
+            if (storage !== "*" && pStorage !== storage) return false;
+
+            // Filter giá:
+            if (price === "1" && pPrice > 10000000) return false;
+            if (price === "2" && (pPrice < 10000000 || pPrice > 20000000))
+              return false;
+            if (price === "3" && pPrice < 20000000) return false;
+
+            return true;
+          },
+        });
+      }
+
+      // Gọi lại filter khi thay đổi
+      document.querySelectorAll(".filter-bar select").forEach((sel) => {
+        sel.addEventListener("change", applyFilter);
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chatIcon = document.getElementById("chat-icon");
+        const chatBox = document.getElementById("chat-box");
+        const closeChat = document.getElementById("close-chat");
+        const sendBtn = document.getElementById("send-btn");
+        const chatInput = document.getElementById("chat-input");
+        const chatMessages = document.getElementById("chat-messages");
+
+        if (!chatIcon || !chatBox || !closeChat) {
+          console.error("Chatbox HTML không tồn tại!");
+          return;
+        }
+
+        chatIcon.onclick = () => {
+          chatBox.classList.add("open");
+          chatIcon.style.display = "none";
+        };
+
+        closeChat.onclick = () => {
+          chatBox.classList.remove("open");
+          chatIcon.style.display = "flex";
+        };
+
+        // Gửi tin nhắn
+        sendBtn.onclick = sendMessage;
+        chatInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") sendMessage();
+        });
+
+        function sendMessage() {
+          const text = chatInput.value.trim();
+          if (!text) return;
+
+          // Tin nhắn user
+          const userMsg = document.createElement("div");
+          userMsg.classList.add("user-message");
+          userMsg.textContent = text;
+          chatMessages.appendChild(userMsg);
+
+          chatInput.value = "";
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+
+          // Bot trả lời tạm
+          setTimeout(() => {
+            const botMsg = document.createElement("div");
+            botMsg.classList.add("bot-message");
+            botMsg.textContent = "AI sẽ trả lời ở đây...";
+            chatMessages.appendChild(botMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }, 600);
+        }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+  </body>
+</html>
