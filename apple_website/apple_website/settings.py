@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'home',
 ]
 
@@ -111,7 +113,9 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
+LANGUAGE_CODE = 'vi-vn'
+USE_L10N = True
+USE_THOUSANDS_SEPARATOR = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -123,3 +127,13 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'home', 'static')]
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+env_path = os.path.join(BASE_DIR, 'key.env')
+load_dotenv(dotenv_path=env_path)
+load_dotenv()
+VNPAY_RETURN_URL =os.getenv('VNPAY_RETURN_URL')   # get from config
+VNPAY_PAYMENT_URL = os.getenv('VNPAY_PAYMENT_URL')   # get from config
+VNPAY_API_URL =os.getenv('VNPAY_API_URL')
+VNPAY_TMN_CODE = os.getenv('VNPAY_TMN_CODE')   # Website ID in VNPAY System, get from config
+VNPAY_HASH_SECRET_KEY =  os.getenv('VNPAY_HASH_SECRET_KEY')  # Secret key for create checksum,get from config
