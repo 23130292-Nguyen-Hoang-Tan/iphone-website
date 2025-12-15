@@ -284,7 +284,9 @@ header {
 .product-image {
   width: 100%;
   height: 260px;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  background-color: #fff;
   transition: all 0.3s ease-in-out 0s;
 }
 
@@ -316,7 +318,18 @@ header {
 }
 
 .product-detail > span {
-  color: var(--spanColor);
+    font-size: 20px;
+    color: #ff1212;
+    font-weight: 600;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+/* Price styling: large, red, bold */
+.price {
+  font-size: 20px;
+  font-weight: 800;
+  color: #e60023;
 }
 
 .fa-heart {

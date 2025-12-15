@@ -32,7 +32,7 @@
         <a href="{% url 'index' %}">Home</a>
 
         <div class="menu-item">
-          <a href="{% url 'iphone' %}">Iphone</a>
+          <a href="{% url 'category' slug='iphone' %}">Iphone</a>
           <div class="submenu">
             <a href="#">iPhone X Series</a>
             <a href="#">iPhone 11 Series</a>
@@ -44,7 +44,7 @@
         </div>
 
         <div class="menu-item">
-          <a href="{% url 'ipad' %}">Ipad</a>
+          <a href="{% url 'category' slug='ipad' %}">Ipad</a>
           <div class="submenu">
             <a href="#">iPad Mini</a>
             <a href="#">iPad Air</a>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="menu-item">
-          <a href="{% url 'macbook' %}">Macbook</a>
+          <a href="{% url 'category' slug='macbook' %}">Macbook</a>
           <div class="submenu">
             <a href="#">MacBook Air</a>
             <a href="#">MacBook Pro 13"</a>
@@ -62,7 +62,7 @@
         </div>
 
         <div class="menu-item">
-          <a href="{% url 'phukien' %}">Accessory</a>
+          <a href="{% url 'category' slug='accessory' %}">Accessory</a>
           <div class="submenu">
             <a href="#">Ốp lưng</a>
             <a href="#">Sạc</a>
@@ -101,72 +101,49 @@
       <h1 class="heading-title">Your Shopping Cart</h1>
 
       <div class="cart-wrapper">
-        <!-- Product 1 -->
-        <div class="cart-item">
-          <div class="product-image">
-            <img
-              src="{% static 'images/Iphone/iphone-15-pro-max.webp' %}"
-              alt="Iphone 15 Pro Max"
-            />
-          </div>
-          <div class="product-detail">
-            <h4>Iphone 15 Pro Max</h4>
-            <span class="price">18.750.000 VNĐ</span>
-            <div class="quantity-control">
-              <button class="qty-btn">-</button>
-              <input type="text" value="1" class="qty-input" />
-              <button class="qty-btn">+</button>
+        {% if cart_items %}
+          {% for item in cart_items %}
+            <div class="cart-item">
+              <div class="product-image">
+                {% if item.product.image_url %}
+                  <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" />
+                {% elif item.product.main_image %}
+                  <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" />
+                {% else %}
+                  <img src="{% static 'images/Iphone/iphone-15-pro-max.webp' %}" alt="{{ item.product.name }}" />
+                {% endif %}
+              </div>
+              <div class="product-detail">
+                <h4>{{ item.product.name }}{% if item.variant %} — {{ item.variant.name }}{% endif %}</h4>
+                <span class="price">{% if item.variant %}{{ item.variant.price|floatformat:0 }}{% else %}{{ item.product.price|floatformat:0 }}{% endif %} VNĐ</span>
+                <div class="quantity-control">
+                  <form method="post" action="{% url 'update_cart' %}">
+                    {% csrf_token %}
+                    <input type="number" min="0" name="qty_{{ item.product.id }}_{{ item.variant.id|default:'0' }}" value="{{ item.qty }}" />
+                    <button type="submit" class="btn">Cập nhật</button>
+                  </form>
+                </div>
+                <p class="subtotal">Tạm tính: {{ item.subtotal|floatformat:0 }} VNĐ</p>
+                <form method="post" action="{% url 'remove_from_cart' item.product.id %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="variant_id" value="{{ item.variant.id|default:'0' }}" />
+                  <button type="submit" class="btn">Xóa</button>
+                </form>
+              </div>
             </div>
-            <p class="subtotal">Tạm tính: 18.750.000 VNĐ</p>
-          </div>
-        </div>
-
-        <!-- Product 2 -->
-        <div class="cart-item">
-          <div class="product-image">
-            <img
-              src="{% static 'images/Ipad/ipad-air-4.jpg' %}"
-              alt="Ipad Air 4"
-            />
-          </div>
-          <div class="product-detail">
-            <h4>Ipad Air 4</h4>
-            <span class="price">10.000.000 VNĐ</span>
-            <div class="quantity-control">
-              <button class="qty-btn">-</button>
-              <input type="text" value="2" class="qty-input" />
-              <button class="qty-btn">+</button>
-            </div>
-            <p class="subtotal">Tạm tính: 20.000.000 VNĐ</p>
-          </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="cart-item">
-          <div class="product-image">
-            <img
-              src="{% static 'images/Macbook/macbook-pro-14.png' %}"
-              alt="Macbook Pro 14"
-            />
-          </div>
-          <div class="product-detail">
-            <h4>Macbook Pro 14</h4>
-            <span class="price">27.500.000 VNĐ</span>
-            <div class="quantity-control">
-              <button class="qty-btn">-</button>
-              <input type="text" value="1" class="qty-input" />
-              <button class="qty-btn">+</button>
-            </div>
-            <p class="subtotal">Tạm tính: 27.500.000 VNĐ</p>
-          </div>
-        </div>
+          {% endfor %}
+        {% else %}
+          <p>Giỏ hàng trống.</p>
+        {% endif %}
       </div>
 
       <!-- Summary -->
       <div class="cart-summary">
         <h3>Tổng cộng</h3>
-        <p>Tạm tính: <strong>66.250.000 VNĐ</strong></p>
-        <button class="swiper-btn checkout-btn">Thanh toán</button>
+        <p>Tạm tính: <strong>{{ cart_total|floatformat:0 }} VNĐ</strong></p>
+        <form method="get" action="{% url 'checkout' %}">
+          <button class="swiper-btn checkout-btn" type="submit">Thanh toán</button>
+        </form>
       </div>
     </section>
 

@@ -335,7 +335,7 @@
         <a href="{% url 'index' %}">Home</a>
 
         <div class="menu-item">
-          <a href="{% url 'iphone' %}">Iphone</a>
+          <a href="{% url 'category' slug='iphone' %}">Iphone</a>
           <div class="submenu">
             <a href="#">iPhone X Series</a>
             <a href="#">iPhone 11 Series</a>
@@ -347,7 +347,7 @@
         </div>
 
         <div class="menu-item">
-          <a href="{% url 'ipad' %}">Ipad</a>
+          <a href="{% url 'category' slug='ipad' %}">Ipad</a>
           <div class="submenu">
             <a href="#">iPad Mini</a>
             <a href="#">iPad Air</a>
@@ -356,7 +356,7 @@
         </div>
 
         <div class="menu-item">
-          <a href="{% url 'macbook' %}">Macbook</a>
+          <a href="{% url 'category' slug='macbook' %}">Macbook</a>
           <div class="submenu">
             <a href="#">MacBook Air</a>
             <a href="#">MacBook Pro 13"</a>
@@ -365,7 +365,7 @@
         </div>
 
         <div class="menu-item">
-          <a href="{% url 'phukien' %}">Accessory</a>
+          <a href="{% url 'category' slug='accessory' %}">Accessory</a>
           <div class="submenu">
             <a href="#">Ốp lưng</a>
             <a href="#">Sạc</a>
@@ -404,27 +404,35 @@
       <div class="detail-container">
         <!-- Left: Image -->
         <div class="detail-image">
-          <img
-            src="{% static 'images/Iphone/iphone_11_pro_max.avif' %}"
-            alt="Iphone 11 pro max"
-          />
+          {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" />
+          {% elif product.main_image %}
+            <img src="{{ product.main_image.url }}" alt="{{ product.name }}" />
+          {% else %}
+            <img src="{% static 'images/Iphone/iphone_11_pro_max.avif' %}" alt="{{ product.name }}" />
+          {% endif %}
+          {% if product.images.all %}
+          <div class="gallery">
+            {% for img in product.images.all %}
+            <img src="{{ img.image.url }}" alt="{{ img.caption }}" style="width:80px;height:80px;object-fit:cover;margin:6px;border-radius:8px;" />
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
 
         <!-- Right: Info -->
         <div class="detail-info">
-          <h2>IPhone 11 Pro Max</h2>
+          <h2>{{ product.name }}</h2>
 
           <div class="rating">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <i class="fas fa-star"></i><i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-            <span class="review-count">(128 đánh giá)</span>
+            <!-- optional rating placeholder -->
+            <span class="review-count">&nbsp;</span>
           </div>
 
-          <h3 class="price">12.990.000 VNĐ</h3>
+          <h3 class="price">{{ product.price|floatformat:0 }} VNĐ</h3>
 
           <!-- Status -->
-          <p><strong>Tình trạng kho:</strong> Còn 64 sản phẩm</p>
+          <p><strong>Tình trạng kho:</strong> Còn {{ product.stock }} sản phẩm</p>
           <p><strong>Bảo hành:</strong> 12 tháng chính hãng</p>
           <p><strong>Vận chuyển:</strong> Miễn phí toàn quốc</p>
 
@@ -432,33 +440,45 @@
           <div class="promo-box">
             <h4>🎁 Khuyến mãi</h4>
             <ul>
-              <li>Tặng ốp lưng cao cấp trị giá 199.000đ</li>
-              <li>Giảm thêm 5% khi thanh toán qua ví điện tử</li>
-              <li>Trả góp 0% trong 12 tháng</li>
+              <li>Ưu đãi dành cho sản phẩm này</li>
             </ul>
           </div>
 
-          <!-- Storage options -->
+          <!-- Variants (storage) -->
           <div class="option-box">
-            <h4>Dung lượng:</h4>
+            <h4>Phiên bản (Dung lượng):</h4>
             <div class="option-list">
-              <button class="option active">64 GB</button>
-              <button class="option">128 GB</button>
-              <button class="option">256 GB</button>
+              <select id="variantSelect" name="variant_id" form="addToCartForm">
+                <option value="0">Chọn phiên bản</option>
+                {% for v in variants %}
+                  <option value="{{ v.id }}" data-price="{{ v.price }}" {% if default_variant and v.id == default_variant.id %}selected{% endif %}>{{ v.name }} — {{ v.price|floatformat:0 }} VNĐ</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
 
-          <!-- Colors -->
-          <div class="option-box">
-            <h4>Màu sắc:</h4>
-            <div class="color-list">
-              <div class="color color-gold active"></div>
-              <div class="color color-silver"></div>
-              <div class="color color-black"></div>
-            </div>
-          </div>
+          <form id="addToCartForm" method="post" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="qty" value="1" />
+            <input type="hidden" name="variant_id" id="variant_id_input" value="{% if default_variant %}{{ default_variant.id }}{% else %}0{% endif %}" />
+            <button class="product-button add-to-cart" type="submit">Thêm vào giỏ hàng</button>
+          </form>
 
-          <button class="product-button add-to-cart">Thêm vào giỏ hàng</button>
+          <script>
+            // update hidden variant_id and displayed price when user changes variant
+            (function(){
+              const select = document.getElementById('variantSelect');
+              const hidden = document.getElementById('variant_id_input');
+              const priceEl = document.querySelector('.price');
+              if(!select) return;
+              select.addEventListener('change', function(){
+                const opt = select.options[select.selectedIndex];
+                hidden.value = opt.value || 0;
+                const p = opt.dataset.price;
+                if(p && priceEl) priceEl.textContent = parseFloat(p).toFixed(0) + ' VNĐ';
+              });
+            })();
+          </script>
         </div>
       </div>
 
@@ -466,34 +486,18 @@
       <div class="spec-section">
         <h2>Thông số kỹ thuật</h2>
         <table class="spec-table">
+          {% if product.specs %}
+          {% for key, val in product.specs.items %}
           <tr>
-            <td>Màn hình</td>
-            <td>OLED 6.5 inches</td>
+            <td>{{ key }}</td>
+            <td>{{ val }}</td>
           </tr>
+          {% endfor %}
+          {% else %}
           <tr>
-            <td>Camera sau</td>
-            <td>12MP (Triple camera)</td>
+            <td colspan="2">Thông số đang cập nhật.</td>
           </tr>
-          <tr>
-            <td>Camera trước</td>
-            <td>12MP</td>
-          </tr>
-          <tr>
-            <td>Chip xử lý</td>
-            <td>Apple A13 Bionic</td>
-          </tr>
-          <tr>
-            <td>Dung lượng pin</td>
-            <td>3969 mAh, hỗ trợ sạc nhanh</td>
-          </tr>
-          <tr>
-            <td>Cổng sạc</td>
-            <td>Lightning</td>
-          </tr>
-          <tr>
-            <td>SIM</td>
-            <td>1 Nano SIM + 1 eSIM</td>
-          </tr>
+          {% endif %}
         </table>
       </div>
 
