@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apple Shops - {{ category.name }}</title>
+
+    <!-- Google font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+
+    <!-- Isotope filter -->
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+
+    <style>
+      .product-container {
+        margin-top: 100px;
+        padding: 2rem;
+      }
+
+      .page-title {
+        font-size: 36px;
+        font-weight: 800;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .search-box {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .search-box input {
+        width: 50%;
+        padding: 0.8rem 1rem;
+        border-radius: 20px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        outline: none;
+      }
+
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .product-card {
+        position: relative;
+        background: var(--whiteColor);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: rgba(0, 0, 0, 0.15) 0 4px 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: rgba(0, 0, 0, 0.25) 0 6px 15px;
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .product-detail {
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .product-button {
+        width: 80%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 8px;
+        background: var(--primaryColor);
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .product-button:hover {
+        background: var(--fontColor);
+      }
+
+      /* HOVER INFO BOX */
+      .hover-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(255, 255, 255, 0.95);
+        width: 100%;
+        height: 100%;
+        padding: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        line-height: 1.4rem;
+      }
+
+      .product-card:hover .hover-info {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* ================== TOAST STYLE ================== */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.4s ease;
+        z-index: 9999;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <h2 class="logo">Apple Shops</h2>
+
+      <div class="menu-list">
+        <a href="{% url 'index' %}">Home</a>
+
+        <div class="menu-item">
+          <a href="{% url 'category' slug='iphone' %}">Iphone</a>
+          <div class="submenu">
+            <a href="#">iPhone X Series</a>
+            <a href="#">iPhone 11 Series</a>
+            <a href="#">iPhone 12 Series</a>
+            <a href="#">iPhone 13 Series</a>
+            <a href="#">iPhone 14 Series</a>
+            <a href="#">iPhone 15 Series</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'category' slug='ipad' %}">Ipad</a>
+          <div class="submenu">
+            <a href="#">iPad Mini</a>
+            <a href="#">iPad Air</a>
+            <a href="#">iPad Pro</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'category' slug='macbook' %}">Macbook</a>
+          <div class="submenu">
+            <a href="#">MacBook Air</a>
+            <a href="#">MacBook Pro 13"</a>
+            <a href="#">MacBook Pro 16"</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="{% url 'category' slug='accessory' %}">Accessory</a>
+          <div class="submenu">
+            <a href="#">Ốp lưng</a>
+            <a href="#">Sạc</a>
+            <a href="#">Tai nghe</a>
+            <a href="#">Giá đỡ</a>
+          </div>
+        </div>
+
+        <a href="{% url 'new' %}">News</a>
+        <a href="{% url 'contact' %}">Contact</a>
+      </div>
+
+      <div class="menu-right">
+        <div class="search">
+          <button class="btn btn-menu">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+
+        <div class="user">
+          <button class="btn btn-menu">
+            <i class="fas fa-user"></i>
+          </button>
+        </div>
+
+        <div class="cart">
+          <a href="{% url 'cart' %}" class="btn btn-menu">
+            <i class="fas fa-shopping-cart"></i>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="product-container">
+      <h2 class="page-title">{{ category.name }}</h2>
+      <hr />
+
+      <div class="search-box">
+        <form method="get" action="">
+          <input type="text" name="q" placeholder="🔍 Tìm sản phẩm..." value="{{ q }}" />
+          <select name="storage">
+            <option value="">Dung lượng</option>
+            <option value="64" {% if storage == '64' %}selected{% endif %}>64GB</option>
+            <option value="128" {% if storage == '128' %}selected{% endif %}>128GB</option>
+            <option value="256" {% if storage == '256' %}selected{% endif %}>256GB</option>
+            <option value="512" {% if storage == '512' %}selected{% endif %}>512GB</option>
+          </select>
+          <select name="sort">
+            <option value="">Sắp xếp</option>
+            <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Giá: Cao → Thấp</option>
+            <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Giá: Thấp → Cao</option>
+          </select>
+          <button type="submit" class="product-button">Áp dụng</button>
+        </form>
+      </div>
+
+      <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+          {% if product.image_url %}
+          <img class="product-image" src="{{ product.image_url }}" alt="{{ product.name }}" />
+          {% elif product.main_image %}
+          <img class="product-image" src="{{ product.main_image.url }}" alt="{{ product.name }}" />
+          {% else %}
+          <img class="product-image" src="{% static 'images/Iphone/iphone_11_pro_max.avif' %}" alt="{{ product.name }}" />
+          {% endif %}
+          <div class="product-detail">
+            <h4>{{ product.name }}</h4>
+            <span class="price">{{ product.price|floatformat:0 }} VNĐ</span>
+          </div>
+          <div class="hover-info">
+            <p><strong>Tình trạng:</strong> Còn {{ product.stock }} sản phẩm</p>
+            <p><strong>Bảo hành:</strong> 12 tháng</p>
+            <p>
+              <strong><a href="{% url 'product_detail_slug' slug=product.slug %}">Xem chi tiết sản phẩm</a></strong>
+            </p>
+          </div>
+          <form method="post" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="qty" value="1" />
+            <button class="product-button" type="submit">Thêm vào giỏ</button>
+          </form>
+        </div>
+        {% endfor %}
+        {% if products|length == 0 %}
+        <div style="padding:30px; text-align:center; color:#666;">Hiện chưa có sản phẩm. Vui lòng thêm sản phẩm trong Admin.</div>
+        {% endif %}
+      </div>
+    </main>
+  </body>
+</html>

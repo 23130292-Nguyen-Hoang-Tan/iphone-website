@@ -284,7 +284,9 @@ header {
 .product-image {
   width: 100%;
   height: 260px;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  background-color: #fff;
   transition: all 0.3s ease-in-out 0s;
 }
 

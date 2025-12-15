@@ -13,5 +13,6 @@ urlpatterns = [
     path('ipad/', views.ipad, name='ipad'),
     path('macbook/', views.macbook, name='macbook'),
     path('phu-kien/', views.phukien, name='phukien'),
+    path('category/<slug:slug>/', views.category, name='category'),
     path('response/', views.response, name='response'),
 ]
