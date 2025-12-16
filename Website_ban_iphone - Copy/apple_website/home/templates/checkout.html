@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apple-shops-checkout</title>
+
+    <!-- google font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- style -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <!-- icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- Checkout Section -->
+    <section class="checkout-section">
+      <h1 class="heading-title">Checkout & Order History</h1>
+
+      <!-- Current Order -->
+      <div class="checkout-box current-order">
+        <h2>Current Order</h2>
+        <div class="order-item">
+          <p><strong>Order ID:</strong> #A1005</p>
+          <p><strong>Date:</strong> 25/10/2025</p>
+          <ul class="order-products">
+            <li>Iphone 15 Pro Max × 1 <span>18.750.000 VNĐ</span></li>
+            <li>Ipad Air 4 × 2 <span>20.000.000 VNĐ</span></li>
+            <li>Macbook Pro 14 × 1 <span>27.500.000 VNĐ</span></li>
+          </ul>
+          <p class="total"><strong>Total:</strong> 66.250.000 VNĐ</p>
+          <button
+            class="checkout-btn"
+            onclick="window.location.href='{% url 'payment' %}'"
+          >
+            Xác nhận thanh toán
+          </button>
+        </div>
+      </div>
+
+      <!-- Previous Orders -->
+      <div class="checkout-box previous-orders">
+        <h2>Previous Orders</h2>
+
+        <div class="order-item">
+          <p><strong>Order ID:</strong> #A1004</p>
+          <p><strong>Date:</strong> 12/09/2025</p>
+          <ul class="order-products">
+            <li>Ipad Pro 11” × 1 <span>18.000.000 VNĐ</span></li>
+            <li>Apple Pencil × 1 <span>3.000.000 VNĐ</span></li>
+          </ul>
+          <p class="total"><strong>Total:</strong> 21.000.000 VNĐ</p>
+        </div>
+
+        <div class="order-item">
+          <p><strong>Order ID:</strong> #A1003</p>
+          <p><strong>Date:</strong> 10/08/2025</p>
+          <ul class="order-products">
+            <li>Macbook Air M2 × 1 <span>27.000.000 VNĐ</span></li>
+          </ul>
+          <p class="total"><strong>Total:</strong> 27.000.000 VNĐ</p>
+        </div>
+      </div>
+    </section>
+
+    <!--footer-->
+      {% include 'footer.html' %}
+
+    <!-- Chatbox AI-->
+    {% include 'chatbox.html' %}
+    <script src="{% static 'js/app.js' %}"></script>
+  </body>
+</html>

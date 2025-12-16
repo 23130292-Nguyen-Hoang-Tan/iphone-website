@@ -1,0 +1,522 @@
+{% load static humanize %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apple Shops - {{ product.name }}</title>
+
+    <!-- Google font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <style>
+      /* ====================== PRODUCT DETAIL ====================== */
+      .product-detail-page {
+        padding-top: 120px;
+        width: 100%;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Layout */
+      .detail-container {
+        max-width: 1200px;
+        margin: auto;
+        display: flex;
+        gap: 40px;
+        padding: 20px;
+      }
+
+      .detail-image img {
+        border: 7px inset #f8dbd2ff;
+        padding: 14px;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        transform: translateX(-25px);
+      }
+
+      .detail-image img {
+        width: 350px;
+        border-radius: 10px;
+      }
+
+      .detail-info h2 {
+        font-size: 36px;
+        margin-bottom: 16px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      /* Rating */
+      .rating i {
+        color: #f5b100;
+        margin-right: 3px;
+      }
+
+      .review-count {
+        margin-left: 6px;
+        color: #666;
+      }
+
+      /* Price nổi bật */
+      .price {
+        font-size: 32px; /* tăng size */
+        font-weight: 900;
+        color: #e60023;
+        margin: 12px 0 25px;
+      }
+
+      /* Promo box đẹp hơn */
+      .promo-box {
+        background: #ffe9e9;
+        padding: 18px;
+        border-radius: 10px;
+        margin: 18px 0;
+        border-left: 4px solid #e60023;
+      }
+
+      .promo-box h4 {
+        margin-bottom: 8px;
+        font-size: 18px;
+      }
+
+      /* Options */
+      .option-box h4 {
+        margin: 15px 0 8px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .option-list .option {
+        padding: 10px 18px;
+        border: 1px solid #bbb;
+        background: #fff;
+        margin-right: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+
+      .option.active {
+        border-color: #e60023;
+        color: #e60023;
+        font-weight: bold;
+      }
+
+      .color-list {
+        display: flex;
+        gap: 12px;
+      }
+
+      .color {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 3px solid transparent;
+        box-sizing: border-box;
+      }
+
+      /* Mỗi màu phải có background */
+      .color-gold {
+        background: gold;
+      }
+
+      .color-silver {
+        background: #d9d9d9;
+      }
+
+      .color-black {
+        background: #000;
+      }
+
+      .color.active {
+        border-color: #e60023;
+      }
+
+      .spec-section {
+        margin-top: 60px;
+      }
+
+      .spec-section h2 {
+        font-size: 30px;
+        margin-bottom: 20px;
+        font-weight: 700;
+      }
+
+      .spec-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #ccc;
+        background: #fafafa;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .spec-table td {
+        padding: 14px 18px;
+        border-bottom: 1px solid #ddd;
+        font-size: 17px;
+      }
+
+      .spec-table tr td:first-child {
+        font-weight: bold;
+        width: 30%;
+        background: #f0f0f0;
+      }
+
+      /* Description đẹp hơn */
+      .description-section {
+        margin-top: 50px;
+        background: #f9f9f9;
+        padding: 25px 30px;
+        border-radius: 12px;
+        line-height: 1.8;
+        font-size: 18px;
+        border-left: 4px solid #e60023;
+      }
+
+      .description-section h2 {
+        font-size: 30px;
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+
+      /* ==================== PRODUCT GRID ==================== */
+      .page-title {
+        margin-top: 40px;
+        font-size: 28px;
+        font-weight: 700;
+      }
+
+      .product-grid {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+        max-width: 1200px;
+        margin: 30px auto;
+      }
+
+      /* Wrap tổng */
+      .related-container {
+        margin-top: 50px;
+        padding: 20px;
+        position: relative;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.13);
+      }
+
+      .related-container .page-title {
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      /* Slider */
+      .related-slider {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding-bottom: 10px;
+      }
+
+      .related-slider::-webkit-scrollbar {
+        display: none; /* ẩn scroll */
+      }
+
+      /* Product item */
+      .related-item {
+        min-width: 180px;
+        text-decoration: none;
+      }
+
+      .product-card.small-card {
+        text-align: center;
+        padding: 12px;
+      }
+
+      .product-card.small-card .view-detail {
+        margin-top: 6px;
+        font-size: 15px;
+        color: #0b0000f0;
+        font-weight: 500;
+        text-decoration: underline;
+        transition: 0.3s;
+      }
+
+      .product-card.small-card .view-detail:hover {
+        color: #e50505f0;
+      }
+
+      .small-card {
+        border-radius: 12px;
+        background: #fff;
+        padding: 12px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+        text-align: center;
+        transition: 0.25s;
+      }
+
+      .small-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.18);
+      }
+
+      .small-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      .small-card h4 {
+        margin: 10px 0 5px;
+        font-size: 16px;
+        color: #222;
+      }
+
+      .small-card .price {
+        font-size: 15px;
+        font-weight: 600;
+        color: #e60023;
+      }
+
+      /* Button trái/phải */
+      .slide-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        border: none;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        z-index: 10;
+        font-size: 18px;
+        transition: 0.2s;
+      }
+
+      .slide-btn:hover {
+        background: #f3f3f3;
+      }
+
+      .left-btn {
+        left: -10px;
+      }
+
+      .right-btn {
+        right: -10px;
+      }
+
+      .color-option {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #f5f5f5;
+}
+
+.color-option:hover {
+    background: #e0e0e0;
+    border-color: #999;
+}
+    </style>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- ===================== PRODUCT DETAIL ===================== -->
+    <main class="product-detail-page">
+      <div class="detail-container">
+        <div class="detail-image">
+          <img src="{{ default_variant.image.url }}" alt="{{ product.name }}" />
+        </div>
+
+        <div class="detail-info">
+          <h2>{{ product.name }}</h2>
+
+          <div class="rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="far fa-star"></i>
+            <i class="far fa-star"></i>
+            <span class="review-count">(128 đánh giá)</span>
+          </div>
+
+          <h3 class="price">
+            {{ default_variant.final_price|floatformat:0|intcomma }} VNĐ
+          </h3>
+
+          <p>
+            <strong>Tình trạng kho:</strong> Còn
+            <span id="stock-quantity"
+              >{{ default_variant.stock_quantity }}</span
+            >
+            sản phẩm
+          </p>
+          <p>
+            <strong>Bảo hành:</strong> {{ product.warranty_months }} tháng chính
+            hãng
+          </p>
+          <p><strong>Vận chuyển:</strong> {{ product.shipping_info }}</p>
+
+          <div class="promo-box">
+            <h4>🎁 Khuyến mãi</h4>
+            <ul>
+              <li>Tặng ốp lưng cao cấp trị giá 199.000đ</li>
+              <li>Giảm thêm 5% khi thanh toán qua ví điện tử</li>
+              <li>Trả góp 0% trong 12 tháng</li>
+            </ul>
+          </div>
+
+          <div class="option-box">
+            <h4>Dung lượng:</h4>
+            <div class="option-list">
+              {% for variant in variants %}
+              <button
+                class="option {% if variant.storage == default_variant.storage %}active{% endif %}"
+                data-variant-id="{{ variant.id }}"
+                data-price="{{ variant.final_price|floatformat:0 }}"
+                data-stock="{{ variant.stock_quantity }}"
+                data-color="{{ variant.color }}"
+                data-storage="{{ variant.storage }}"
+              >
+                {{ variant.storage }}
+              </button>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="option-box">
+              <h4>Màu sắc:</h4>
+              <div class="color-list">
+                  {% for variant in unique_colors %} 
+                  <span class="color-option" data-color-name="{{ variant.color }}">
+                      {{ variant.color }}
+                  </span>
+                  {% endfor %}
+              </div>
+          </div>
+
+          <button class="product-button add-to-cart">Thêm vào giỏ hàng</button>
+        </div>
+      </div>
+
+      <div class="spec-section">
+        <h2>Thông số kỹ thuật</h2>
+        <table class="spec-table">
+          {% for spec in specs %}
+          <tr>
+            <td>{{ spec.key }}</td>
+            <td>{{ spec.value }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+
+      <div class="description-section">
+        <h2>Mô tả sản phẩm</h2>
+        <p>{{ product.description|safe }}</p>
+      </div>
+
+      <hr />
+
+      <!-- ===================== RELATED PRODUCTS ===================== -->
+      <div class="related-container">
+        <h2 class="page-title">Sản phẩm đề xuất</h2>
+        <hr />
+
+        <!-- Buttons -->
+        <button class="slide-btn left-btn">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="slide-btn right-btn">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <!-- Slider Wrapper -->
+        <div class="related-slider">
+          <!-- PRODUCT 1 -->
+          <a href="product-detail-1.html" class="related-item">
+            <div class="product-card small-card">
+              <img src="{% static 'images/Iphone/Iphone13.avif' %}" alt="" />
+              <h4>iPhone 13</h4>
+              <span class="price">12.990.000 VNĐ</span>
+              <p class="view-detail">Xem chi tiết</p>
+            </div>
+          </a>
+
+          <!-- PRODUCT 2 -->
+          <a href="product-detail-2.html" class="related-item">
+            <div class="product-card small-card">
+              <img src="{% static 'images/Ipad/ipad10.jpg' %}" alt="" />
+              <h4>iPad 10</h4>
+              <span class="price">25.990.000 VNĐ</span>
+              <p class="view-detail">Xem chi tiết</p>
+            </div>
+          </a>
+
+          <!-- PRODUCT 3 -->
+          <a href="product-detail-3.html" class="related-item">
+            <div class="product-card small-card">
+              <img
+                src="{% static 'images/Macbook/macbook-pro-16.jpeg' %}"
+                alt=""
+              />
+              <h4>Macbook Pro 16</h4>
+              <span class="price">34.590.000 VNĐ</span>
+              <p class="view-detail">Xem chi tiết</p>
+            </div>
+          </a>
+
+          <!-- PRODUCT 4 -->
+          <a href="product-detail-4.html" class="related-item">
+            <div class="product-card small-card">
+              <img src="{% static 'images/phu_kien/tai-nghe.jpg' %}" alt="" />
+              <h4>Airpods Pro</h4>
+              <span class="price">3.900.000 VNĐ</span>
+              <p class="view-detail">Xem chi tiết</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    {% include 'footer.html' %}
+
+    <!-- Chatbox AI-->
+    {% include 'chatbox.html' %}
+
+    <script>
+      const slider = document.querySelector(".related-slider");
+      const left = document.querySelector(".left-btn");
+      const right = document.querySelector(".right-btn");
+
+      right.onclick = () => (slider.scrollLeft += 260);
+      left.onclick = () => (slider.scrollLeft -= 260);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+  </body>
+</html>
