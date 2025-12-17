@@ -1,0 +1,397 @@
+{% load static humanize custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apple Shops - Maboock</title>
+
+    <!-- Google font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+
+    <!-- Isotope filter -->
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+
+    <style>
+      .product-container {
+        margin-top: 100px;
+        padding: 2rem;
+      }
+
+      .page-title {
+        font-size: 36px;
+        font-weight: 800;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .search-box {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .search-box input {
+        width: 50%;
+        padding: 0.8rem 1rem;
+        border-radius: 20px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        outline: none;
+      }
+
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .product-card {
+        position: relative;
+        background: var(--whiteColor);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: rgba(0, 0, 0, 0.15) 0 4px 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: rgba(0, 0, 0, 0.25) 0 6px 15px;
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .product-detail {
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .product-button {
+        width: 80%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 8px;
+        background: var(--primaryColor);
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .product-button:hover {
+        background: var(--fontColor);
+      }
+
+      /* HOVER INFO BOX */
+      .hover-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(255, 255, 255, 0.95);
+        width: 100%;
+        height: 100%;
+        padding: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        line-height: 1.4rem;
+      }
+
+      .product-card:hover .hover-info {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* ================== TOAST STYLE ================== */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.4s ease;
+        z-index: 9999;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <main class="product-container">
+      <h2 class="page-title">Maboock</h2>
+      <hr />
+
+      <!-- Ô tìm kiếm -->
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="🔍 Tìm kiếm sản phẩm..."
+        />
+      </div>
+
+      <!-- Bộ lọc sản phẩm -->
+      <div class="filter-bar">
+        <select id="filterSeries">
+          <option value="*">Tất cả dòng</option>
+          <option value="air">MacBook Air</option>
+          <option value="pro13">MacBook Pro 13"</option>
+          <option value="pro14">MacBook Pro 14"</option>
+          <option value="pro16">MacBook Pro 16"</option>
+        </select>
+
+        <select id="filterStatus">
+          <option value="*">Tất cả</option>
+          <option value="new">New</option>
+          <option value="bestseller">Best Seller</option>
+          <option value="promo">Promo</option>
+        </select>
+
+        <select id="filterChip">
+          <option value="*">Chip</option>
+          <option value="m1">Apple M1</option>
+          <option value="m2">Apple M2</option>
+          <option value="m3">Apple M3</option>
+        </select>
+
+        <select id="filterPrice">
+          <option value="*">Giá</option>
+          <option value="1">Dưới 25 triệu</option>
+          <option value="2">25 – 35 triệu</option>
+          <option value="3">Trên 35 triệu</option>
+        </select>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <!-- PRODUCT CARD -->
+        {% for product in products %}
+          {% with product.variants.first as variant %}
+            {% if variant %}
+        <div
+          class="product-card accessory"
+          data-price="{{ variant.final_price|floatformat:0|default:0 }}"
+          data-status="{% if product.is_new %}new{% elif product.is_bestseller %}bestseller{% else %}promo{% endif %}"
+          data-promo="{{ variant.discount_percent|default:0 }}"
+          data-series="{{ product.name|cut:'Macbook '|cut:'Pro'|cut:'Air' }}"
+          data-chip="{{ product.chip_type|default:'M1' }}"
+        >
+          {% if product.is_new %}
+          <div class="product-label label-red">New</div>
+          {% elif product.is_bestseller %}
+          <div class="product-label label-blue">Best Seller</div>
+          {% elif variant.discount_percent > 0 %}
+          <div class="product-label label-yellow">
+            Sale {{ variant.discount_percent }}%
+          </div>
+          {% endif %}
+
+          <img
+            class="product-image"
+            src="{{ variant.image.url|default:'#' }}"
+            alt="{{ product.name|default:'Macbook' }}"
+          />
+
+          <div class="product-detail">
+            <h4>
+              {{ product.name|default:'[Tên Macbook]' }}
+              <i class="far fa-heart"></i>
+            </h4>
+            <div class="rating">...</div>
+            <span>{{ variant.final_price|floatformat:0|intcomma|default:0 }} VNĐ</span>
+          </div>
+
+          <div class="hover-info">
+            <p>
+              <strong>Tình trạng:</strong> Còn {{ variant.stock_quantity|default:0 }} sản phẩm
+            </p>
+            <p>
+              <strong>Giảm giá:</strong> {{ variant.discount_percent|default:0 }}%
+            </p>
+            <p>
+              <strong>Bảo hành:</strong> {{ product.warranty_months|default:12 }} tháng
+            </p>
+            <p>
+              <strong>Chip xử lý:</strong> {{ product.chip_type|default:'Apple M' }}
+            </p>
+            <p>
+              <strong>Vận chuyển:</strong> {{ product.shipping_info|default:'Miễn phí' }}
+            </p>
+            <p>
+              <strong><a href="{% url 'product_detail' product.slug %}">Xem chi tiết sản phẩm</a></strong>
+            </p>
+          </div>
+          <button class="product-button">Thêm vào giỏ</button>
+        </div>
+            {% endif %}
+          {% endwith %}
+        {% empty %}
+        <div
+          class="no-products"
+          style="padding: 30px; text-align: center; color: #666"
+        >
+          Hiện chưa có sản phẩm. Vui lòng thêm sản phẩm trong Admin.
+        </div>
+        {% endfor %}
+      </div>
+    </main>
+
+    <!--footer-->
+    {% include 'footer.html' %}
+
+    <!-- Chatbox AI-->
+    {% include 'chatbox.html' %}
+
+    <script>
+      const searchInput = document.getElementById("searchInput");
+      const productGrid = document.getElementById("productGrid");
+      const products = Array.from(productGrid.children);
+
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+
+        // Tách sản phẩm khớp và không khớp
+        const matched = [];
+        const unmatched = [];
+
+        products.forEach((card) => {
+          const name = card
+            .querySelector(".product-detail h4")
+            .innerText.toLowerCase();
+
+          if (name.includes(query)) {
+            matched.push(card);
+          } else {
+            unmatched.push(card);
+          }
+        });
+
+        // Xóa toàn bộ grid và sắp lại thứ tự
+        productGrid.innerHTML = "";
+
+        // Hiện sản phẩm khớp, ẩn sản phẩm không khớp
+        matched.forEach((card) => {
+          card.style.display = "block";
+          productGrid.appendChild(card);
+        });
+        unmatched.forEach((card) => {
+          card.style.display = "none";
+          productGrid.appendChild(card);
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // ================== YÊU THÍCH + ADD TO CART ==================
+        document.addEventListener("click", function (e) {
+          if (e.target.classList.contains("fa-heart")) {
+            e.target.classList.toggle("liked");
+            showToast("❤️ Đã thêm vào danh sách yêu thích!");
+          }
+
+          if (e.target.classList.contains("product-button")) {
+            showToast("🛒 Sản phẩm đã được thêm vào giỏ hàng!");
+          }
+        });
+
+        // ======== HÀM HIỂN THỊ TOAST ========
+        function showToast(message) {
+          const toast = document.createElement("div");
+          toast.className = "toast";
+          toast.innerText = message;
+          document.body.appendChild(toast);
+
+          // Hiện ra với animation
+          setTimeout(() => {
+            toast.classList.add("show");
+          }, 100);
+
+          // Tự động ẩn sau 2.5 giây
+          setTimeout(() => {
+            toast.classList.remove("show");
+            setTimeout(() => toast.remove(), 500);
+          }, 2500);
+        }
+      });
+    </script>
+
+    <script>
+      // Isotope Filter Script
+      var iso = new Isotope("#productGrid", {
+        itemSelector: ".product-card",
+        layoutMode: "fitRows",
+        transitionDuration: 0,
+      });
+
+      function applyFilter() {
+        let series = document.getElementById("filterSeries").value;
+        let status = document.getElementById("filterStatus").value;
+        let chip = document.getElementById("filterChip").value;
+        let price = document.getElementById("filterPrice").value;
+
+        iso.arrange({
+          filter: function (item) {
+            let pSeries = item.getAttribute("data-series");
+            let pStatus = item.getAttribute("data-status");
+            let pChip = item.getAttribute("data-chip");
+            let pPrice = parseInt(item.getAttribute("data-price"));
+
+            // Filter theo series
+            if (series !== "*" && pSeries !== series) return false;
+
+            // Filter theo trạng thái (new, bestseller, promo)
+            if (status !== "*" && pStatus !== status) return false;
+
+            // Filter storage
+            if (chip !== "*" && pChip !== chip) return false;
+
+            // Filter giá:
+            if (price === "1" && pPrice > 25000000) return false;
+            if (price === "2" && (pPrice < 25000000 || pPrice > 35000000))
+              return false;
+            if (price === "3" && pPrice < 35000000) return false;
+
+            return true;
+          },
+        });
+      }
+
+      // Gọi lại filter khi thay đổi
+      document.querySelectorAll(".filter-bar select").forEach((sel) => {
+        sel.addEventListener("change", applyFilter);
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+  </body>
+</html>
